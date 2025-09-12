@@ -1,6 +1,9 @@
 package br.com.app.services;
 
+import br.com.app.data.dto.PersonDTO;
 import br.com.app.exception.ResourceNotFoundException;
+import static br.com.app.mapper.ObjectMapper.parseListObjects;
+import static br.com.app.mapper.ObjectMapper.parseObject;
 import br.com.app.model.Person;
 import br.com.app.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -21,25 +24,30 @@ public class PersonServices {
 
     private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
-    public List<Person> findAll() {
-        logger.info("Finding all Person!");
+    public List<PersonDTO> findAll() {
+        logger.info("Finding all PersonDTO!");
 
-        return repository.findAll();
+        return parseListObjects(repository.findAll(), PersonDTO.class);
     }
 
-    public Person findById(Long id){
+    public PersonDTO findById(Long id){
         logger.info("Finding one Person!");
 
-        return repository.findById(id)
+        var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No found records for this ID!"));
+
+        return parseObject(entity, PersonDTO.class);
     }
 
-    public Person create(Person person){
+    public PersonDTO create(PersonDTO person){
         logger.info("Creating one Person!");
-        return repository.save(person);
+
+        var entity = parseObject(person, Person.class);
+
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person){
+    public PersonDTO update(PersonDTO person){
         logger.info("Updating one Person!");
 
         Person entity = repository.findById(person.getId())
@@ -50,7 +58,7 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(entity);
+        return parseObject(repository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id){
