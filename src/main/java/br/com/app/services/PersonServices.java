@@ -3,12 +3,13 @@ package br.com.app.services;
 import br.com.app.exception.ResourceNotFoundException;
 import br.com.app.model.Person;
 import br.com.app.repository.PersonRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 
 @Service
 public class PersonServices {
@@ -18,7 +19,7 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    private Logger logger = Logger.getLogger(PersonServices.class.getName());
+    private Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
 
     public List<Person> findAll() {
         logger.info("Finding all Person!");
